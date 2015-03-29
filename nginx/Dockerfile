@@ -1,13 +1,8 @@
-############################################################
-# Dockerfile to build Nginx Installed Containers
-# Based on Ubuntu
-############################################################
-
 # Set the base image to Ubuntu
 FROM ubuntu
 
 # File Author / Maintainer
-MAINTAINER Anand M.S <anand.m.s@gmail.com>
+MAINTAINER Anand Mani Sankar
 
 # Install Nginx
 
@@ -35,6 +30,5 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 # Expose ports
 EXPOSE 80
 
-# Set the default command to execute
-# when creating a new container
+# Set the default command to execute when creating a new container
 CMD service nginx start
