@@ -7,17 +7,10 @@ MAINTAINER Anand Mani Sankar
 # Update the repository
 RUN apt-get update
 
-# Install the dependencies
+# Install Node.js and other dependencies
 RUN apt-get -y install curl
 RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
-RUN apt-get -y install python build-essential
-
-# Install nodejs
-RUN apt-get -y install nodejs
-
-# Check node and npm versions
-RUN node -v
-RUN npm -v
+RUN apt-get -y install python build-essential nodejs
 
 # Install nodemon
 RUN npm install -g nodemon
