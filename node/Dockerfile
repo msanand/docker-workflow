@@ -4,9 +4,6 @@ FROM    ubuntu
 # File Author / Maintainer
 MAINTAINER Anand Mani Sankar
 
-# Update the repository
-RUN apt-get update
-
 # Install Node.js and other dependencies
 RUN apt-get update && \
     apt-get -y install curl && \
