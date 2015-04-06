@@ -12,24 +12,18 @@ node1:
         - redis
     ports:
         - "8080"
-    volumes:
-        - node:/src
 node2:
     build: ./node
     links:
         - redis
     ports:
         - "8080"
-    volumes:
-        - node:/src
 node3:
     build: ./node
     links:
         - redis
     ports:
         - "8080"
-    volumes:
-        - node:/src
 redis:
     image: redis
     ports:
