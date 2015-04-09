@@ -1,9 +1,9 @@
 # A sample Docker workflow with Node.js, Redis and NGiNX
 
-This blog post gives a detailed explanation of workflow used in this repository:
+For a detailed explanation of the workflow used in this repository, refer to [this post from my blog]((http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/):
 [http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/](http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/)
 
-This blog post gives a detailed overview of Containers and Docker:
+For a detailed overview of Containers and Docker, refer to [this post from my blog]((http://anandmanisankar.com/posts/container-docker-PaaS-microservices/):
 [http://anandmanisankar.com/posts/container-docker-PaaS-microservices/](http://anandmanisankar.com/posts/container-docker-PaaS-microservices/)
 
 
