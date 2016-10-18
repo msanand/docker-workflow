@@ -1,5 +1,5 @@
 # Set the base image to Ubuntu
-FROM    ubuntu
+FROM    ubuntu:trusty
 
 # File Author / Maintainer
 MAINTAINER Anand Mani Sankar
