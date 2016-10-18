@@ -11,6 +11,5 @@ dependencies:
 test:
     override:
         - docker-compose run -d --no-deps node1
-        - cd node
-        - npm install --save chai
-        - mocha
+        - cd node; npm install --save chai
+        - cd node; mocha
