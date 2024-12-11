@@ -1,29 +1,27 @@
-# Set the base image to Ubuntu
-FROM    ubuntu:trusty
+# Use a modern, official Node.js base image
+FROM node:18-buster
 
 # File Author / Maintainer
-MAINTAINER Anand Mani Sankar
+LABEL maintainer="Anand Mani Sankar"
 
-# Install Node.js and other dependencies
-RUN apt-get update && \
-    apt-get -y install curl && \
-    curl -sL https://deb.nodesource.com/setup | sudo bash - && \
-    apt-get -y install python build-essential nodejs
+# Set the working directory to /src
+WORKDIR /src
 
-# Install nodemon
+# Copy only package.json and package-lock.json to leverage Docker caching
+COPY package.json package-lock.json /src/
+
+# Install dependencies
+RUN npm install --production
+
+# Copy the rest of the application code
+COPY . /src/
+
+# Install nodemon globally (for development purposes)
 RUN npm install -g nodemon
 
-# Provides cached layer for node_modules
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /src && cp -a /tmp/node_modules /src/
+# Expose port 8080
+EXPOSE 8080
 
-# Define working directory
-WORKDIR /src
-ADD . /src
-
-# Expose port
-EXPOSE  8080
-
-# Run app using nodemon
+# Run the app using nodemon (useful for development environments)
 CMD ["nodemon", "/src/index.js"]
+

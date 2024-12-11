@@ -1,14 +1,10 @@
-# Set the base image to Ubuntu
-FROM        ubuntu
+# Use official Redis image as a base or Alpine-based image
+FROM redis:alpine
 
-# File Author / Maintainer
-MAINTAINER Anand Mani Sankar
+# Set metadata for the image (replaces MAINTAINER)
+LABEL maintainer="Anand Mani Sankar"
 
-# Update the repository and install Redis Server
-RUN         apt-get update && apt-get install -y redis-server
+# Expose Redis port
+EXPOSE 6379
 
-# Expose Redis port 6379
-EXPOSE      6379
-
-# Run Redis Server
-ENTRYPOINT  ["/usr/bin/redis-server"]
+# Entrypoint is already defined in the base image

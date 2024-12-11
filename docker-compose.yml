@@ -1,30 +1,37 @@
-nginx:
+version: '3.8'
+
+services:
+  nginx:
     build: ./nginx
-    links:
-        - node1:node1
-        - node2:node2
-        - node3:node3
     ports:
-        - "80:80"
-node1:
+      - "80:80"
+    depends_on:
+      - node1
+      - node2
+      - node3
+
+  node1:
     build: ./node
-    links:
-        - redis
     ports:
-        - "8080"
-node2:
+      - "8081:8080"  # Explicitly map the host and container ports
+    depends_on:
+      - redis
+
+  node2:
     build: ./node
-    links:
-        - redis
     ports:
-        - "8080"
-node3:
+      - "8082:8080"  # Explicitly map the host and container ports
+    depends_on:
+      - redis
+
+  node3:
     build: ./node
-    links:
-        - redis
     ports:
-        - "8080"
-redis:
+      - "8083:8080"  # Explicitly map the host and container ports
+    depends_on:
+      - redis
+
+  redis:
     image: redis
     ports:
-        - "6379"
+      - "6379:6379"  # Explicitly map the host and container ports
