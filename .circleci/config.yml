@@ -46,7 +46,7 @@ jobs:
       # Run tests
       - run:
           name: Run Mocha tests
-          command: docker-compose exec -T node1 mocha
+          command: docker-compose exec -T node1 npx mocha test/
           
       # Test application endpoints
       - run:
