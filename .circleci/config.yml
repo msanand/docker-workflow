@@ -1,0 +1,130 @@
+version: 2.1
+
+# Define reusable executors
+executors:
+  docker-executor:
+    machine:
+      image: ubuntu-2204:2023.07.2
+    working_directory: ~/project
+
+# Define reusable commands
+commands:
+  setup-docker-compose:
+    description: "Install and setup docker-compose"
+    steps:
+      - run:
+          name: Install docker-compose
+          command: |
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker-compose --version
+
+# Define jobs
+jobs:
+  build-and-test:
+    executor: docker-executor
+    steps:
+      - checkout
+      - setup-docker-compose
+      
+      # Build all services
+      - run:
+          name: Build Docker images
+          command: docker-compose build
+      
+      # Start services in background
+      - run:
+          name: Start services
+          command: docker-compose up -d
+          
+      # Wait for services to be ready
+      - run:
+          name: Wait for services to start
+          command: |
+            timeout 60 bash -c 'until curl -f http://localhost:80; do sleep 2; done'
+            
+      # Run tests
+      - run:
+          name: Run Mocha tests
+          command: docker-compose exec -T node1 mocha
+          
+      # Test application endpoints
+      - run:
+          name: Test application functionality
+          command: |
+            # Test main endpoint responds
+            response=$(curl -s http://localhost:80)
+            echo "Response: $response"
+            
+            # Verify counter functionality
+            if echo "$response" | grep -q "This page has been viewed"; then
+              echo "✓ Counter functionality working"
+            else
+              echo "✗ Counter functionality failed"
+              exit 1
+            fi
+            
+            # Test load balancing by making multiple requests
+            echo "Testing load balancing..."
+            for i in {1..6}; do
+              curl -s http://localhost:80 | grep "Served by"
+            done
+            
+      # Check service health
+      - run:
+          name: Check service health
+          command: |
+            docker-compose ps
+            echo "All services status checked"
+            
+      # Clean up
+      - run:
+          name: Stop services
+          command: docker-compose down
+          when: always
+
+  # Separate job for security scanning (optional)
+  security-scan:
+    executor: docker-executor
+    steps:
+      - checkout
+      - setup-docker-compose
+      
+      - run:
+          name: Build images for scanning
+          command: docker-compose build
+          
+      - run:
+          name: Scan Docker images for vulnerabilities
+          command: |
+            # Install trivy for security scanning
+            sudo apt-get update
+            sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install -y trivy
+            
+            # Scan each custom image
+            echo "Scanning nginx image..."
+            trivy image docker-workflow_nginx || true
+            
+            echo "Scanning node image..."
+            trivy image docker-workflow_node1 || true
+            
+            echo "Security scan completed"
+
+# Define workflows
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build-and-test
+      - security-scan:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: 
+                - master
+                - main
