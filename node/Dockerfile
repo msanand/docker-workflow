@@ -1,29 +1,21 @@
-# Set the base image to Ubuntu
-FROM    ubuntu:trusty
+# Use official Node.js 18 LTS image
+FROM node:18
 
-# File Author / Maintainer
-MAINTAINER Anand Mani Sankar
+# Set working directory
+WORKDIR /src
 
-# Install Node.js and other dependencies
-RUN apt-get update && \
-    apt-get -y install curl && \
-    curl -sL https://deb.nodesource.com/setup | sudo bash - && \
-    apt-get -y install python build-essential nodejs
-
-# Install nodemon
+# Install nodemon globally
 RUN npm install -g nodemon
 
-# Provides cached layer for node_modules
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /src && cp -a /tmp/node_modules /src/
+# Copy package.json and install dependencies
+COPY package.json /src/package.json
+RUN npm install
 
-# Define working directory
-WORKDIR /src
-ADD . /src
+# Copy the rest of the application code
+COPY . /src
 
 # Expose port
-EXPOSE  8080
+EXPOSE 8080
 
 # Run app using nodemon
 CMD ["nodemon", "/src/index.js"]
