@@ -4,7 +4,7 @@ version: 2.1
 executors:
   docker-executor:
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:current
     working_directory: ~/project
 
 # Define reusable commands
