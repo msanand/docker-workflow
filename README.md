@@ -8,4 +8,5 @@ For a detailed explanation of the workflow used in this repository, refer to [th
 For a detailed overview of Containers and Docker, refer to [this post from my blog](http://anandmanisankar.com/posts/container-docker-PaaS-microservices/):
 [http://anandmanisankar.com/posts/container-docker-PaaS-microservices/](http://anandmanisankar.com/posts/container-docker-PaaS-microservices/)
 
-
+A Vagrantfile has been added for developing purposes, just install vagrant and run "vagrant up":
+[https://www.vagrantup.com/downloads.html](https://www.vagrantup.com/downloads.html)
